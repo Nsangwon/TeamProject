@@ -1,0 +1,109 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+body{
+font-family: 'Noto Sans KR', sans-serif;
+}
+form{
+	text-align: center;
+}
+.included{
+	width: 30px;
+}
+.row > a{
+	color: black;
+	text-decoration: none;
+	cursor: hand;
+}
+#button a{
+	font-size: 15px;
+	text-decoration: none;
+	cursor: hand;
+}
+.submit{
+	margin-top: 20px;
+}
+select{
+	width: 100px;
+}
+#info{
+	float: right;
+	width: 500px;
+}
+img{
+  width: 500px;
+}
+.row {
+  margin: 1px;
+  
+	}
+div #img {
+	float: left;
+}
+#content{
+	text-align:center;
+}
+
+*{
+	margin: 0;
+	padding: 0;
+}
+ui , li {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+	color: inherit;
+}
+.menu_wrap .dep1 > li {
+	display: inline-block;
+	width: 100px;
+	vertical-align : top;
+	text-align: center;
+	font-size: 13px;
+}
+.menu_wrap .dep1 > li:hover > .dep2{
+	display: block;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+.menu_wrap .dep1 > li > a {
+	color: black;
+	display: block;
+	padding: 10px 0;
+}
+.menu_wrap .dep2 > li > a {
+	color: black;
+}
+.menu_wrap .dep2{
+	display: none;
+	padding: 10px 0;
+} 
+.menu_wrap .dep2 a:hover{
+	text-decoration: initial;
+}
+.menu_wrap .dep1 > li {
+	display: inline-block;
+	width: 100px;
+	vertical-align : top;
+	text-align: center;
+	font-size: 16px;
+	position:relative;
+}
+.logo > a > img {
+  width: 300px;
+  height: 150px;
+  display : block;
+  margin : auto;
+}
+.dep2{
+	position: absolute;
+	left:0;
+	top:40px;
+	z-index: 10000;
+	width: 100%;
+	background : rgba(255,255,255,0.7);
+	}
+
+.dep1{
+	text-align:center;
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.2.xsd
+      http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="oracle.jdbc.OracleDriver"></property>
+		<property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+		<property name="username" value="ezen200"></property>
+		<property name="password" value="ezen200"></property>
+	</bean>
+
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="configLocation"
+			value="classpath:/mybatis-config.xml"></property>
+		<property name="mapperLocations"
+			value="classpath:mappers/**/*Mapper.xml"></property>
+	</bean>
+
+
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate"
+		destroy-method="clearCache">
+		<constructor-arg name="sqlSessionFactory"
+			ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+	
+<!-- 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"> 
+ <property name="host" value="stmp naver.com"/> 
+</bean> -->
+
+
+
+
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<!-- navermail설정 -->
+<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"> 
+ <property name="host" value="smtp.naver.com"/> <!-- 메이서버 호스트 -->
+ <property name="port" value="465"/> <!-- 메이서버 포트번호 -->
+ <property name="username" value="msn6903@naver.com"/> <!-- 자신의 이메일 아이디 -->
+ <property name="password" value="coltdesert29"/> <!-- 자신의 비밀번호 -->
+   <!-- 보안연결 SSL과 관련된 설정 -->
+ <property name="javaMailProperties">
+  <props>
+  <prop key="mail.smtp.auth">true</prop>
+  <prop key="mail.smtp.starttls.enable">true</prop>
+  <prop key="mail.smtps.checkserveridentity">true</prop>
+  <prop key="mail.smtps.ssl.trust">*</prop>
+  <prop key="mail.debug">true</prop>
+  <prop key="mail.smtp.socketFactory.class">javax.net.ssl.SSLSocketFactory</prop>
+  </props>
+ </property>
+</bean>
+
+
+
+
+
+
+	<tx:annotation-driven />
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+	<context:component-scan
+		base-package="kr.co.persistence" />
+	<context:component-scan
+		base-package="kr.co.service" />
+
+</beans>

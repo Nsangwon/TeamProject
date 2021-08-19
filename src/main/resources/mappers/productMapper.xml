@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.product">
+
+
+
+	<insert id="order">
+		INSERT 
+		INTO 
+		prod_order
+		(
+		orderNum,
+		orderProdName,
+		orderProdPrice,
+		orderProdQuantity,
+		orderProdSize,
+		orderUserId,
+		orderUserAddress,
+		orderProdStatus
+		)
+		VALUES
+		(
+		(SELECT NVL2(MAX(orderNum), MAX(orderNum) + 1 , 1) FROM prod_order),
+		#{orderProdName},
+		#{orderProdPrice},
+		#{orderProdQuantity},
+		#{orderProdSize},
+		#{orderUserId},
+		#{orderUserAddress},
+		0
+		)
+		
+		<selectKey order="AFTER" keyProperty="orderNum"
+			resultType="Integer">
+			SELECT
+			MAX(orderNum)
+			FROM prod_order
+		</selectKey>
+		
+	
+	</insert>
+
+	<select id="review" resultType="kr.co.domain.ProductVO">
+	select * from product where prodBno = #{prodBno}
+	</select>
+
+	<select id="getContent" resultType="ProductVO">
+		SELECT 
+		prodContent
+		FROM
+		product
+		WHERE
+		prodBno = #{bno}
+	
+	</select>
+
+	<select id="getBnoForAttach" resultType="Integer">
+		SELECT
+		NVL2(MAX(prodBno), MAX(prodBno) + 1, 1) FROM product
+	</select>
+
+	<insert id="insertProduct">
+		INSERT
+		INTO product
+		(
+		prodBno,
+		prodName,
+		prodCategory,
+		prodContent,
+		prodTitle,
+		prodPrice,
+		prodThumbnail
+		)
+		VALUES
+		(
+		(SELECT NVL2
+		(MAX(prodBno), MAX(prodBno) + 1, 1)
+		FROM product),
+		#{prodName},
+		#{prodCategory},
+		#{prodContent},
+		#{prodTitle},
+		#{prodPrice},
+		#{prodThumbnail}
+		)
+
+		<selectKey order="AFTER" keyProperty="prodBno"
+			resultType="Integer">
+			SELECT
+			MAX(prodBno)
+			FROM product
+		</selectKey>
+
+	</insert>
+
+	<select id="getProdAmount" resultType="Integer">
+		SELECT
+		COUNT(prodName)
+		FROM product
+	</select>
+
+		<select id="listProd" resultType="ProductVO">
+		SELECT
+		prodName,
+		prodBno,
+		prodCategory,
+		prodPrice,
+		prodSalesCount,
+		prodRegdate,
+		prodThumbnail
+		FROM
+		product
+		
+		<choose>
+			<when test="prodCategory != null and prodCategory != ''">
+				WHERE prodCategory = #{prodCategory}
+			</when>
+
+			<when test="keyword != null and keyword != ''">
+				WHERE prodName LIKE '%'||#{keyword}||'%'
+			</when>
+			
+			<when test="prodCategory != null and prodCategory != '' and keyword != null and keyword != '' ">
+				WHERE prodCategory = #{prodCategory} and prodName LIKE '%'||#{keyword}||'%'
+			</when>
+		</choose>
+		
+		<!-- <if test=" prodCategory != null and prodCategory != '' ">
+			WHERE prodCategory = #{prodCategory}
+		</if> -->
+		
+		<if test=" prodOrder != null and prodOrder != '' ">
+			<trim prefix="ORDER BY">
+				<if test=" prodOrder == 'prodPrice' ">prodPrice</if>
+				<if test=" prodOrder == 'prodSalesCount' ">prodSalesCount</if>
+				<if test=" prodOrder == 'prodRegdate' ">prodRegdate</if>
+			</trim>
+		</if>
+		
+	</select>
+	
+
+	<select id="prodRead" resultType="ProductVO">
+		SELECT *
+		FROM product
+		WHERE
+		prodName = #{prodName}
+	</select>
+	
+	<select id="getThumnail" resultType="String">
+		SELECT
+		prodThumbnail
+		FROM
+		product
+		WHERE
+		prodName = #{prodName}
+	</select>
+	
+	<update id="readcnt">
+		UPDATE product set prodReadCnt = prodReadCnt + 1
+	</update>
+	
+	<update id="updateProduct">
+		UPDATE product
+		SET
+		prodCategory = #{prodCategory},
+		prodContent = #{prodContent},
+		prodTitle = #{prodTitle},
+		prodUpdatedate = SYSDATE,
+		prodPrice = #{prodPrice},
+		prodThumbnail = #{prodThumbnail}
+		WHERE 
+		prodName = #{prodName}
+	
+	</update>
+	
+	<select id="getThumbFilePath" resultType="String">
+		SELECT
+		prodThumbnail
+		FROM product
+		WHERE prodName = #{prodName}
+	</select>
+	
+	<delete id="deleteProd">
+		DELETE
+		FROM product
+		WHERE prodNAme = #{prodName}
+	</delete>
+	
+	<select id="prodNameDupCheck" resultType="String">
+		SELECT
+		prodName
+		FROM product
+		WHERE prodName = #{prodName}
+	</select>
+	
+	
+	
+</mapper>

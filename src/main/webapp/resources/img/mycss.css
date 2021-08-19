@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+
+
+.dropmenu ul{
+color: black;
+height:120px;
+list-style:none;
+margin:0;
+padding:0;
+display:inline-block;
+
+}
+.dropmenu li{
+color: black;
+float:left;
+padding:0px;
+}
+.dropmenu li a{
+color: black;
+display:block;
+line-height:30px;
+margin:0px;
+padding:0px 25px;
+text-align:center;
+text-decoration:none;
+}
+.dropmenu li ul{
+display:none; 
+height:auto;
+border:0px;
+position:absolute;
+width:200px;
+z-index:200;
+
+}
+.dropmenu li:hover ul{
+display:block;
+}
+.dropmenu li li {
+display:block;
+float:none;
+margin:0px;
+padding:0px;
+width:200px;
+ background-color: #ffffff;
+        opacity: 0.5;
+}
+.dropmenu li ul a{
+color: black;
+display:block;
+height:40px;
+font-size:14px;
+margin:0px;
+text-align:left;
+}
+#mail_check_input_box_false{
+    background-color:#ebebe4;
+} 
+#mail_check_input_box_true{
+    background-color:white;
+}
+.correct{
+    color : green;
+}
+.incorrect{
+    color : red;
+}

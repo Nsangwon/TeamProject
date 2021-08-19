@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.qna">
+
+	<select id="getAmount" resultType="Integer">
+		SELECT COUNT(qQno) FROM qna WHERE qBno = #{qBno}
+	</select>
+	
+	<select id="getMyListAmount" resultType="Integer">
+		SELECT COUNT(qUserId) FROM qna WHERE qUserId = #{qUserId}
+	</select>
+	
+	<delete id="delete">
+		DELETE FROM qna WHERE qQno = #{qQno}
+	</delete>
+	
+	<delete id="deleteqReproot">
+		DELETE FROM qna WHERE qReproot = #{qQno}
+	</delete>
+	
+	<delete id="deleteAll">
+		DELETE FROM qna WHERE qBno = #{qBno}
+	</delete>
+	
+	<update id="update">
+		UPDATE qna SET qTitle = #{qTitle}, qContent = #{qContent}, qUpdatedate = SYSDATE
+		WHERE qQno = #{qQno}
+	</update>
+	
+	<select id="list" resultType="kr.co.domain.QNABoardVO">
+		SELECT qQno, qBno, qTitle, qWriter, qUserId, qContent, qPassword, TO_CHAR(qUpdatedate, 'yyyy-mm-dd') qUpdatedate, qReproot, qRepstep, qRepindent
+		FROM qna WHERE qBno = #{qBno} ORDER BY qReproot DESC, qRepstep ASC
+	</select>
+	
+	<select id="myList" resultType="kr.co.domain.QNABoardVO">
+		SELECT qQno, qBno, qTitle, qWriter, qUserId, qContent, qPassword, TO_CHAR(qUpdatedate, 'yyyy-mm-dd') qUpdatedate, qReproot, qRepstep, qRepindent
+		FROM qna WHERE qUserId = #{qUserId} ORDER BY qReproot DESC, qRepstep ASC
+	</select>
+	
+	<select id="getPw" resultType="String">
+		SELECT qPassword FROM qna WHERE qQno = #{qQno}
+	</select>
+	
+	<select id="getBno" resultType="kr.co.domain.ProductVO">
+		SELECT prodBno FROM product WHERE prodName = '제품이름'
+	</select>
+	
+	<select id="getProdName" resultType="String">
+		SELECT
+		prodName
+		FROM product
+		WHERE prodBno = #{qBno}
+	</select>
+	
+	<select id="getNowLogin" resultType="kr.co.domain.LoginDTO">
+		SELECT userId, userName, userPw, userGrade FROM member WHERE userId = #{userId}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO qna (qBno, qQno, qTitle, qContent, qWriter, qPassword, qReproot, qUserId) VALUES 
+		(#{qBno},qna_seq.nextval,
+		#{qTitle},#{qContent},#{qWriter},#{qPassword}, qna_seq.currval, #{qUserId})
+			<selectKey order="AFTER" keyProperty="qQno" resultType="Integer">
+				SELECT MAX(qQno) FROM qna
+			</selectKey>
+	</insert>
+	
+	<insert id="answer">
+		INSERT INTO qna (qBno, qQno, qTitle, qContent, qWriter, qPassword, qReproot, qRepstep, qRepindent, qUserId) VALUES 
+		(#{qBno},qna_seq.nextval,
+		#{qTitle},#{qContent},#{qWriter},#{qPassword},#{qReproot},1,1, #{qUserId})
+			<selectKey order="AFTER" keyProperty="qQno" resultType="Integer">
+				SELECT MAX(qQno) FROM qna
+			</selectKey>
+	</insert>
+</mapper>

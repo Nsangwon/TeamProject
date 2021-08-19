@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.cart">
+	<!-- *Mapper.xml에 Select 이용 시 resultType에 패키지명.DTO(VO)에서 패키지명을 붙이지 않고도 사용하는 방법
+	예제 resultType="kr.co.domain.BoardVO"에서 resultType="BoardVO" 이렇게 간편하게 작성 가능-->
+	
+
+	<resultMap type="ProductVO" id="ProductVO">
+		<result column="prodName" property="prodName"/>
+		<result column="prodThumbnail" property="prodThumbnail"/>
+	</resultMap>
+
+	<resultMap type="CartDTO" id="CartDTO">
+		<result column="cartNo" property="cartNo"/>
+		<result column="userId" property="userId"/>
+		<result column="prodName" property="prodName"/>
+		<result column="prodSize" property="prodSize"/>
+		<result column="amount" property="amount"/>
+		<collection property="productVO" resultMap="ProductVO"/>
+	</resultMap>
+	
+	<select id="orderCheckList" resultMap="CartDTO">
+		SELECT cartNo, userId, p.prodName, prodPrice, p.prodThumbnail, prodSize, amount
+		FROM product p, cart c
+		WHERE cartNO = #{cartNO} AND userId = #{userId} AND p.prodName = c.prodName
+		ORDER BY cartNo DESC
+	</select>
+	
+	<delete id="delete">
+		DELETE FROM cart WHERE cartNO = #{cartNO}
+	</delete>
+	
+	<update id="update">
+		UPDATE cart SET amount = #{amount} 
+		WHERE cartNo = #{cartNo} AND userId = #{userId} AND prodName = #{prodName} AND prodSize = #{prodSize}
+	</update>
+	
+	<insert id="insert">	<!-- 장바구니 중복이면 개수만 더하기 -->
+		MERGE INTO cart
+		USING dual ON (userId = #{userId} AND prodName = #{prodName} AND prodSize = #{prodSize})
+		WHEN MATCHED THEN
+		UPDATE SET amount = amount + #{amount}
+		WHEN NOT MATCHED THEN
+		INSERT (cartNo, userId, prodName, prodSize, amount)
+		VALUES ((SELECT NVL2(MAX(cartNo), MAX(cartNo)+1, 1) FROM cart), 
+		#{userId}, #{prodName}, #{prodSize}, #{amount})
+	</insert>
+	
+</mapper>

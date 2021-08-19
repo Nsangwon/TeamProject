@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.review">
+	
+	<select id="getAmount" resultType="Integer">
+		SELECT COUNT(reRno) FROM review WHERE reBno = #{reBno} 
+	</select>
+	
+	<update id="update">
+		UPDATE review SET reWriter = #{reWriter}, reContent = #{reContent},
+		reUpdatedate = SYSDATE  WHERE reRno = #{reRno}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM review WHERE reRno = #{reRno}
+	</delete>
+
+	<select id="list" resultType="kr.co.domain.ReviewReplyVO">
+      SELECT reRno,reBno,reWriter,reContent,reRegdate,TO_CHAR(reUpdatedate, 'yyyy-mm-dd') reUpdatedate,reStar  
+      FROM review WHERE reBno = #{reBno} ORDER By reRno DESC 
+   </select>
+
+    <insert id="insert">
+     INSERT INTO review (reRno, reBno, reWriter, reContent, reStar) VALUES ((SELECT NVL2(MAX(reRno), MAX(reRno)+1, 1) FROM review), #{reBno}, #{reWriter}, #{reContent}, #{reStar})
+      
+      <selectKey order="AFTER" keyProperty="reRno" resultType="Integer">
+      	SELECT MAX(reRno) FROM review
+      </selectKey>
+   </insert> 
+  
+</mapper>

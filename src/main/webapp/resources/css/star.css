@@ -1,0 +1,70 @@
+@charset "UTF-8";
+.star{
+
+font-size: 30px !important;
+
+color: rgb(192,192,192);     
+
+cursor: pointer;
+
+}
+
+
+.starList{
+	
+color: rgb(192, 192, 192) ;  
+
+cursor: pointer;
+
+margin: 0px 10px;
+
+}
+
+.bright{
+
+color: rgb(33,33,33);
+
+}
+
+
+
+.pagination a.active:hover{
+	background-color: rgb(140,140,140);
+	color: white;
+	}
+	.pagination a:hover:not(.active) {
+   background-color: silver;
+   color: white;
+	}
+	.pagination a{
+	   border-radius:20%;
+	}
+	
+	.pagination a.active{
+	   background-color: black;
+	   color: white !important;
+	}
+	
+.pageNum ,
+.rePrev ,
+.reNext{
+	color: black !important; 
+}
+.review:hover ,
+.review_insert_btn:hover ,
+.review_btn_update_form:hover,
+.review_btn_delete:hover,
+.reGoFirst,
+.reGoLast{
+	
+	background-color: black;
+	color: white;
+	
+}
+.reviewBody{
+	width: 800px; 
+	/*  border: solid rgb(140,140,140) 1px;  */
+	margin: auto;
+}
+
+	

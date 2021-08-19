@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.kPay">
+	<!-- *Mapper.xml에 Select 이용 시 resultType에 패키지명.DTO(VO)에서 패키지명을 붙이지 않고도 사용하는 방법
+	예제 resultType="kr.co.domain.BoardVO"에서 resultType="BoardVO" 이렇게 간편하게 작성 가능-->
+
+	<insert id="setNum">
+		INSERT INTO
+		kpay
+		(
+		oNum,
+		orderId,
+		tno
+		)
+		VALUES
+		(
+		#{oNum},
+		#{orderId},
+		1
+		)
+		
+	</insert>
+
+	<update id="setTid">
+		UPDATE kpay SET tid = #{tid} WHERE tno = 1
+	</update>
+	
+	
+	<select id="getTid" resultType="String">
+		SELECT
+		tid
+		FROM
+		kpay
+		WHERE
+		tno = 1
+	</select>
+	
+	<select id="getNum" resultType="Integer">
+		SELECT
+		onum
+		FROM
+		kpay
+		WHERE
+		tno = 1
+	</select>
+	
+	<select id="getId" resultType="String">
+		SELECT
+		orderId
+		FROM
+		kpay
+		WHERE
+		tno = 1
+	</select>
+	
+	<delete id="deleteTid">
+		DELETE
+		FROM
+		kpay
+		WHERE
+		tno = 1
+	</delete>
+	
+	
+	
+</mapper>

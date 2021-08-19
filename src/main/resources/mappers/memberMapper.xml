@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.member">
+	
+	<insert id="order">
+		INSERT INTO prod_order (orderNum, orderProdName, orderProdPrice, orderProdQuantity,
+		orderProdSize, orderUserId, orderUserAddress, orderProdStatus)
+		VALUES ((SELECT NVL2(MAX(orderNum), MAX(orderNum) + 1 , 1) FROM prod_order),
+		#{orderProdName}, #{orderProdPrice}, #{orderProdQuantity}, #{orderProdSize}, #{orderUserId},
+		#{orderUserAddress}, 0)
+		
+		<selectKey order="AFTER" keyProperty="orderNum" resultType="Integer">
+			SELECT MAX(orderNum) FROM prod_order
+		</selectKey>
+	</insert>
+	
+	
+	<select id="emailcheck" resultType="int">
+		SELECT COUNT(*) FROM member WHERE userEmail = #{userEmail}
+	</select>
+	
+	
+	<resultMap type="MemberDTO" id="MemberDTO">
+		<result column="userId" property="userId"/>
+	</resultMap>
+	
+	<resultMap type="ProductVO" id="ProductVO">
+		<result column="prodName" property="prodName"/>
+		<result column="prodPrice" property="prodPrice"/>
+		<result column="prodThumbnail" property="prodThumbnail"/>
+	</resultMap>
+	
+	<resultMap type="ProdStockDTO" id="ProdStockDTO">
+		<result column="prodStockSSize" property="prodStockSSize"/>
+		<result column="prodStockMSize" property="prodStockMSize"/>
+		<result column="prodStockLSize" property="prodStockLSize"/>
+	</resultMap>
+	
+	<resultMap type="CartDTO" id="CartDTO">
+		<result column="cartNo" property="cartNo"/>
+		<result column="userId" property="userId"/>
+		<result column="prodName" property="prodName"/>
+		<result column="prodSize" property="prodSize"/>
+		<result column="amount" property="amount"/>
+		<collection property="memberDTO" resultMap="MemberDTO"/>
+		<collection property="productVO" resultMap="ProductVO"/>
+		<collection property="prodStockDTO" resultMap="ProdStockDTO"/>
+	</resultMap>
+	
+	<select id="cartlist" resultMap="CartDTO">
+		SELECT cartNo, c.userId, p.prodName, p.prodPrice, p.prodThumbnail, prodSize, amount, 
+		s.prodStockSSize, s.prodStockMSize, s.prodStockLSize
+		FROM member m, product p, cart c, prod_stock s
+		WHERE c.userId = #{userId} AND m.userId = c.userId AND c.prodName = s.prodName AND p.prodName = c.prodName
+		ORDER BY cartNo DESC 
+	</select>
+	
+	
+	<update id="updateFindPw">
+		UPDATE member SET userPw = #{userPw} WHERE userId = #{userId} AND userEmail = #{userEmail}
+	</update>
+	
+	
+	<select id="findPw" resultType="MemberDTO">
+		SELECT * FROM member WHERE userId = #{userId} AND userEmail = #{userEmail}
+	</select>
+	
+	
+	<select id="findId" resultType="MemberDTO">
+		SELECT * FROM member WHERE userEmail = #{userEmail}
+	</select>
+
+	
+	<delete id="deleteMember">
+		DELETE FROM member WHERE userId = #{userId}
+	</delete>
+	
+	
+	<select id="readInfo" resultType="MemberDTO">
+		SELECT * FROM member WHERE userId = #{userId}
+	</select>
+	
+	
+	<sql id="search">
+		<if test="selector == 'userId'.toString()">
+			WHERE UPPER(userId) LIKE '%'||UPPER(#{keyword})||'%'
+		</if>
+		
+		<if test="selector == 'userName'.toString()">
+			WHERE UPPER(userName) LIKE '%'||UPPER(#{keyword})||'%'
+		</if>
+		
+		<if test="selector == 'userEmail'.toString()">
+			WHERE UPPER(userEmail) LIKE '%'||UPPER(#{keyword})||'%'
+		</if>
+		
+		<if test="selector == 'userAddress'.toString()">
+			WHERE UPPER(userAddress) LIKE '%'||UPPER(#{keyword})||'%'
+		</if>
+	</sql>
+	
+	<select id="search" resultType="MemberDTO">
+		SELECT * FROM member
+		<include refid="search"/>
+		ORDER BY userRegdate DESC
+	</select>
+	
+	
+	<select id="getSearchAmount" resultType="int">
+		SELECT COUNT(userId) FROM member
+		<include refid="search"/>
+	</select>
+	
+	
+	<select id="list" resultType="MemberDTO">
+		SELECT * FROM member ORDER BY userRegdate DESC
+	</select>
+	
+	
+	<select id="getAmount" resultType="int">
+		SELECT COUNT(userId) from member
+	</select>
+	
+	
+	<select id="idcheck" resultType="int">
+		SELECT COUNT(*) FROM member WHERE userId = #{userId}
+	</select>
+	
+	
+	<insert id="insert">
+		INSERT INTO member (userId, userPw, userName, userEmail, userBirthday, userAddress, userGrade) 
+		VALUES (#{userId}, #{userPw}, #{userName}, #{userEmail}, #{userBirthday}, #{userAddress}, #{userGrade})
+	</insert>
+
+
+
+<!--test  -->
+
+	<select id="selectEmail" resultType="String">
+		SELECT userEmail FROM member WHERE userId = #{orderUserId}
+	</select>
+
+
+	<update id="updateOrderProdStatus">
+		UPDATE prod_order SET orderProdStatus = #{orderProdStatus}, orderTrackingNum = #{orderTrackingNum}
+		WHERE orderNum = #{orderNum}
+	</update>
+
+
+	<delete id="deleteOrder">
+		DELETE FROM prod_order WHERE orderNum = #{orderNum}
+	</delete>
+
+
+	<update id="updateOrderAddress">
+		UPDATE prod_order SET orderUserAddress = #{orderUserAddress} WHERE orderNum = #{orderNum}
+	</update>
+	
+
+	<select id="readOrder" resultType="kr.co.domain.OrderVO">
+		SELECT * FROM prod_order WHERE orderNum = #{orderNum}
+	</select>
+
+
+	<select id="orderAmount" resultType="Integer">
+		SELECT COUNT(orderNum) FROM prod_order WHERE orderUserId = #{userId}
+	</select>
+   
+   
+	<select id="managementlistAmount" resultType="Integer">
+		SELECT COUNT(orderNum) FROM prod_order 
+	</select>
+
+
+	<select id="managementList" resultType="kr.co.domain.OrderVO">
+		SELECT * FROM prod_order ORDER BY orderNum DESC
+	</select>
+   
+   
+	<select id="orderList" resultType="kr.co.domain.OrderVO">
+		SELECT * FROM prod_order WHERE orderUserId = #{userId} ORDER BY orderNum DESC
+	</select>
+
+
+	<update id="updateGrade">
+		UPDATE member SET userGrade = #{userGrade}
+		WHERE userId = #{userId}
+	</update>
+
+
+	<update id="updateMyself">
+		UPDATE member SET userPw = #{userPw}, userName = #{userName}, userUpdatedate = SYSDATE,
+		userEmail = #{userEmail}, userBirthday = #{userBirthday}, userAddress = #{userAddress} 
+		WHERE userId = #{userId}
+	</update>
+
+
+	<select id="login" resultType="kr.co.domain.MemberDTO">
+		SELECT * FROM member WHERE userId = #{userId}
+	</select>
+
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.prodAttach">
+
+	<delete id="deleteFileImgBno">
+		DELETE 
+		FROM
+		prod_attach
+		WHERE
+		prodAttProdImg = #{imgRealName}
+		and
+		prodAttBno = #{bno}
+	
+	</delete>
+
+	<insert id="insertAttachInfo">
+		INSERT
+		INTO prod_attach
+		(
+		prodAttProdImg, 
+		prodAttPreBno
+		)
+		VALUES 
+		(
+		#{filePath},
+		#{bno}
+		)
+	</insert>
+	
+	<update id="updateBno">
+		UPDATE
+		prod_attach
+		SET
+		prodAttBno = #{prodBno}
+		WHERE
+		prodAttPreBno = #{prodBno}
+	</update>
+	
+	<insert id="updateAttachInfo">
+		INSERT
+		INTO prod_attach
+		(
+		prodAttProdImg,
+		prodAttBno,
+		prodAttPreBno
+		)
+		VALUES
+		(
+		#{filePath},
+		#{bno},
+		#{bno}
+		)
+	</insert>
+	
+	<delete id="deleteAttachFileBno">
+		DELETE
+		FROM prod_attach
+		WHERE
+		prodAttBno = #{bno}
+	</delete>
+	
+	<select id="getAttFilePath" resultType="String">
+		SELECT
+		prodAttProdImg
+		FROM
+		prod_attach
+		WHERE prodAttBno = #{prodBno}
+	</select>
+	
+	
+</mapper>

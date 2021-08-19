@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+img.included{
+	width: 10px;
+}
+
+div.questionContent {
+	min-height: 120px;
+}
+
+div.answerContent {
+	min-height: 120px;
+}
+
+button.goFirst {
+	background-color: black;
+	border-color: black;
+	color: white;
+}
+
+button.qInsert {
+	background-color: black;
+	border-color: black;
+	color: white;
+}
+
+button.aInsert {
+	background-color: black;
+	border-color: black;
+	color: white;
+}
+
+ul.qPagination {
+	display: flex;
+	justify-content: center;
+}
+
+ul.qPagination a.qPageNum  {
+	background-color: white;
+	color: black;
+}
+
+ul.qPagination a.qPrev  {
+	background-color: white;
+	color: black;
+}
+
+ul.qPagination a.qNext  {
+	background-color: white;
+	color: black;
+}
+
+ul.qPagination a.active:hover {
+	background-color: rgb(100, 100, 100);
+	color: white;
+}
+
+ul.qPagination a:hover:not(.active) {
+	background-color: silver;
+	color: white;
+}
+
+ul.qPagination a.active {
+	background-color: black;
+	color: white;
+}
+
+ul.qPagination a{
+	   border-radius:10%;
+}
+
+a.toggleText {
+	color: black;
+	text-decoration: none;
+}
+
+a.toggleText:link {
+	color: black;
+	text-decoration: none;
+}
+
+a.toggleText:visited {
+	color: black;
+	text-decoration: none;
+}
+
+a.toggleText:hover {
+	color: black;
+	text-decoration: none;
+}
+
+a.toggleText:active {
+	color: rgb(0, 0, 0);
+	text-decoration: none;
+}
+
+a.insertBtn {
+	background-color: black;
+	border-color: black;
+	color: white;
+}
+
+hr.subHorizental {
+	margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: DarkGray;
+    height: 1px;
+}
+
+hr.mainHorizental {
+	background-color: DimGray;
+	width: 720px;
+	height: 3px;
+	margin-left: -10px;
+}
